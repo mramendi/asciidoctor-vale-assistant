@@ -274,15 +274,25 @@ file1  file2
 
 **AI action plan**
 
-* Attempt to determine and suggest the content type based on the `content-types.md` file. If the meaning of the text leads to a content type of `procedure`, consider if it is possible to rewrite the content in the file to fit the procedure template.  
+* In all cases display an explanation, critically including the link to the [AsciiDoc DITA Toolkit](https://github.com/rheslop/asciidoc-dita-toolkit/tree/main).
 
-* In all cases display an explanation. cretically including the link to t[AsciiDoc DITA Toolkit](https://github.com/rheslop/asciidoc-dita-toolkit/tree/main).
+* Attempt to determine and suggest the content type based on the `content-types.md` file. If you can determine it, add the content type definition at the start of the file.
+
+* If the meaning of the text leads to a content type of `procedure`, you must **immediately and in the same response** perform a full structural validation of the file against the [procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt). **Proactively identify and suggest fixes for any structural issues (such as potential `TaskStep` or `TaskSection` violations), even if they were not reported in the initial Vale report.** Modify the content as necessary to ensure full compliance with the template and combine all fixes into a single response.
+
 
 **Detail**
 
-Every AsciiDoc assembly or module must have a content type, defined as the `_mod-docs-content-type` atttribute close to the start of the file, ideally on the first line. See the `content-types.md` file for details.
+Every AsciiDoc assembly or module must have a content type, defined as the `_mod-docs-content-type` attribute close to the start of the file, ideally on the first line. See the `content-types.md` file for details.
 
-When choosing a content type for the file, consider the information that is in t he file. If the content type is `procedure`, you must also edit the file to ensure it fits the template.
+When choosing a content type for the file, consider the information that is in the file.
+
+If the content type is `procedure`, you must also edit the file to ensure it fits the [procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt). In particular:
+
+* No subheadings or subsections are allowed
+* Only the listed set of block titles is allowed
+* The `.Procedure` block title ms mandatory
+* The text from the `.Procedure` block title to the next block title or to the end of the file must be a single AsciiDoc list of steps (ordered list or, if there is only a single step or the user needs to pick one of several steps, unordered list). If there is a list of steps and then some additional text after it, insert a suitable supported block title, such as `.Verification` or `Result`, before this additional text.
 
 For working out content types for your files, especially if you need to determine content type for many files at once, consider using the [AsciiDoc DITA Toolkit](https://github.com/rheslop/asciidoc-dita-toolkit/tree/main) .
 
@@ -304,7 +314,7 @@ Do not remove cross-references (`xref:` or `<< ... >>` markup) because of this w
 
 * You can ignore the warnings, complete the conmversion to DITA, and then use the [fix-dita-links](https://github.com/jhradilek/fix-dita-links) script to change the links into the correct format after the conversion.
 
-If you are an AI handling the `CrossReference` warning, list all the instances of this warning in a file together, provide this explanation with the lints to the suggested solutions, and do not recommend any other action for this warning.
+If you are an AI handling the `CrossReference` warning, list all the instances of this warning in a file together, provide this explanation **necessarily including the _links_ to the suggested solutions**, and do not recommend any other action for this warning.
 
 ## LineBreak
 
@@ -474,4 +484,118 @@ Correction:
 `ls -l` for a long list
 
 |===
+```
+
+## TaskStep
+
+**AI action plan**
+* Analyse the content from this line to the next block title, for example, `.Results`, or to the end of the file if there is no following block title. You must understand if it is still a part of the procedure, and if so, how to join it into the ordered or unordered list of steps.
+* If the content continues the list but has one or several line breaks that cause the issue, fix the AsciiDoc list by using the `+` line break symbol on its own line  
+* If some of the content has conceptual subtitles, for example using bold text, and lists actions under them, convert these subtitles into an unordered list of substeps, or an ordered list if they have numbers.
+* If the content continues the procedure conceptually but is not formatted into steps or substeps, attempt to reformat is into steps and substeps as necessary, and ensure they are joined to the existing ordered or unordered AsciiDoc list of steps. You can use the `+` line break symbol on its own line and the AsciiDoc open block, denoted by `--` lines, to ensure correct AsciiDoc as necessary.
+* If the content does not continue the procedure conceptually, use one of the supported block titles, as defined in [the procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt), th separate the content from the procedure steps.
+
+**Details**
+
+Under the `.Procedure` block heading, the procedure template allows only a single AsciiDoc list (ordered or unordered). This warning is reported where this list is broken and some other content, and not the next block title, follows.
+
+Importantly, for this warning you must analyze the entire remaining part of the procedure block (until the next block title or the end of the file) and not just this one line. If you fix only this line, there might be other breaks under it, which Vale did not catch because it only reports this warning once for a procedure block.
+
+In most cases, the following content is still a part of the procedure conceptually, but incorrect formatting breaks the list.
+
+In the simple case the list is continued but is accidentally broken in one or several plcaes, as in the following example:
+
+Failure:
+
+```
+. Run the following command:
+----
+ls
+----
+. Review the output, for example:
+----
+file1     file2
+----
+. Review every listed file.
+```
+
+Correction:
+
+```
+. Run the following command:
++
+----
+ls
+----
+. Review the output.
++
+----
+file1     file2
+----
+. Review every listed file.
+```
+
+Sometimes, some of the remaining content uses conceptual subtitles, for example, lines formatted in bold (`*Subtitle*`), to denote branches in the procedure. In this case, convert these branches to an unordered list of substeps. Alternatively, if the subtitles are numbered, use an ordered list of substeps. Make sure the list of substeps is correctly joined to a step in the main list. The following example shows this case.
+
+Failure:
+
+```
+. Wash your animal.
+. Give the medicine tablet to your animal, depending on the kind of animal:
+
+*Procedure for dogs*
+
+.. Roll the medicine tablet into a piece of ham.
+.. Offer the piece of ham to the dog.
+
+*Procedure for cats*
+
+.. Put on scratch-resistant clothing and bite-resistant gloves
+.. Hold the cat firmly
+.. Open the cat's mouth and place the tablet as deep as you can
+.. Hold the cat's mouth closed until the tablet appears to be ingested
+.. Hope for the best
+
+. Comfort your animal.
+```
+
+Correction:
+
+```
+. Wash your animal.
+. Give the medicine tablet to your animal, depending on the kind of animal:
+** Procedure for dogs:
+... Roll the medicine tablet into a piece of ham.
+... Offer the piece of ham to the dog.
+** Procedure for cats:
+... Put on scratch-resistant clothing and bite-resistant gloves
+... Hold the cat firmly
+... Open the cat's mouth and place the tablet as deep as you can
+... Hold the cat's mouth closed until the tablet appears to be ingested
+... Hope for the best
+. Comfort your animal.
+```
+
+In some other cases, the text still continues the procedure conceptually, but is formatted in some novel way. Use your best judgement to reformat the content into steps and substeps, and make sure to join them to the single list of steps.
+
+There are also cases when the the procedure is actually completed and there is a "postfix" that should really be a result, example, and so on. In this case, add the fitting block title from those supported for procedures according to [the procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt) and, if necessary to avoid duplication, reword the text, as in the following example:
+
+Failure:
+
+```
+. Use the `ls` command to list the files.
+. For every file that must be backed up, use the `cp <filename> /media/backup` command.
+
+After this procedure, your files are backed up.
+```
+
+Correction:
+
+```
+. Use the `ls` command to list the files.
+. For every file that must be backed up, use the `cp <filename> /media/backup` command.
+
+.Result
+
+Your files are backed up.
 ```

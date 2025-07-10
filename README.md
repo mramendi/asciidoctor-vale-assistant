@@ -67,3 +67,11 @@ Note that in these steps the `.txt` extensuon is mandatory because Gemini does n
 6. In the prompt window, use the `+` button to upload the Vale output file (`module.vale.txt`) and the numbered version of the original file (`module.adoc.numbered.txt`).
 7. Enter a brief prompt, for example, `Let's Go!`, and then press Enter.
 The system outputs explanations and suggestions for the issues in your input.
+
+Note: start a new thread with the Gem to work on another file.
+
+## Reporting issues
+
+If you report issues, please include both files that you uploaded to the Gem and also the thread log.
+
+To get a thread log, click the Share button ![Share](sharebutton.png) under the last response in the thread and select **Export to Docs**. Then go to [Google Docs](http://docs.google.com) to find the log as a Docs document. You can then make it readable to "anyone with a link" and send the link with the issue.
