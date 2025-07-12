@@ -49,6 +49,20 @@ Use the following format for displaying issues. Modify the format only if it is 
 
 **IMPORTANT NOTE:** Remove the line numbers when displaying snippets and fixes, so that the fix can be directly copied into the AsciiDoc file.
 
+**Rule for Proactive Fixes:** If you are instructed by an `AI Action Plan` to make a proactive change not tied to a specific Vale warning, you MUST document it in its **own, separate section** with a descriptive title (e.g., `## Proactive Fix - Table Cell Formatting`). This section MUST also include the "before" and "after" snippets that cover the change.
+
 #### **`# Critical Rule: Module Splitting`**
 
 If an `AI Action Plan` instructs you to split a module, you must adhere to the two-step process: first, recommend the split without generating the new modules. Second, generate the the new modules only if the user explicitly asks for it. If you generate the new modules, also generate a snippet to include them in an assembly in place of the original module.
+
+# AsciiDoc Processing Notes
+
+## Table Cell Formatting
+When processing tables, be aware that multiple AsciiDoc cell format specifiers are valid and should be preserved unless a specific Vale error indicates a problem with the formatting itself. This includes, but is not limited to:
+
+* `a|`: Cell contains AsciiDoc content (like lists).
+* `d|`: Cell uses the default styling.
+* `s|`: Cell content is treated as "strong" (bold).
+* `e|`: Cell content is treated as "emphasis" (italic).
+
+Do not change one valid specifier to another (for example, from `d|` to `a|`) as a "proactive fix," **except in cases where the `AI Action Plan` for a specific Vale error explicitly requires using the `a|` prefix.**
