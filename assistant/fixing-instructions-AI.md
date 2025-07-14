@@ -146,8 +146,9 @@ Determine if the module is a procedure. A procedure has a `:_mod-docs-content-ty
 
 Then work through several possibilities:
 
-* If several block titles in succession represent a list, change to an unordered list or description list.
-* If the block title is one of the supported block titles for procedures, but the module is not a procedure, analyze the entire module and suggest either converting the module to a procedure or splitting the procedure part into another module.
+* **If the specific block title is `.Procedure` and the module's content type is NOT `procedure`**, always complete the following action: analyze the entire module and suggest either converting the module to a procedure or splitting the procedure part into another module. **In this specific case do not proceed to other rules.**
+* If the module's content type is not `procedure` and the block title is one of block titles supported for procedure elements according to the [template for procedures](TEMPLATE_PROCEDURE_doing-one-procedure.adoc), analyze the entire module to see if the module or a part of it is a procedure. If it is, suggest either converting the module to a procedure or splitting the procedure part into another module.
+* If several block titles in succession represent a list, change to an unordered list or description list. **However, if `.Procedure` is one of the block titles in the sequence, do not apply this fix to the `.Procedure` block title. Use the specific rule for the `.Procedure` block title.** You can still apply the list fix to other block titles.
 * If the module is not a procedure and the block title is where a subheading should logically be: if this would be a second level subheading (`==`), suggest converting the block title to a subheading. Otherwise, suggest splitting the module.
 * If the module is a procedure and the block title is where a subheading should logically be: suggest splitting the module.
 * If the block title is used as the heading to a block, typically a code block, reword the heading to add it into the normal text preceding the block, preserving the flow of text and of any AsciiDoc framing. In particular, if the text adds a paragraph and the block is in a list, you must use the `+` sign on its own line to join the block to the list.  
@@ -159,6 +160,25 @@ Block titles (`.Block title` in AsciiDoc) are widely used (and abused) for many 
 There are several typical situations. If none of the situations fit, work out other ways of representing the content.
 
 **While one can replicate a block title by using a paragraph in bold, this is NOT a recommended solution, as it creates nonstandard presentation.**
+
+### Procedure element
+
+A concept or reference module might contain block titles supported for procedure elements according to the [template for procedures](TEMPLATE_PROCEDURE_doing-one-procedure.adoc)
+
+In this case, consider if the module should be converted to a procedure or, alternatively, a procedure subsection should be split off into a separate module. If the block title `.Procedure` is present, this conclusion is a certainty. In other cases, it may or may not be true, depending on whether the content of the module (or the content of a subsection) is logically a procedure, that is, it describes a specific action by the user.
+
+If you suggest splitting the procedure subsection into a separate module and then the user asks you to output the split module, make sure to review the context before the procedure heading. Some text before the procedure heading can be the explanation for the procedure. In this case, move this explanation into the new procedure module, alongside the procedure information itself.
+
+** DO NOT** add any `include` statements or references (`xref:`, `link:`, `<<...>>` ) to modules. Instead, **add the new modules to the assembly file in which the existing module is included** and provide the assembly snippet with the module text.
+
+If you are advising the breakup of modules and outputting the content of any new modules, provide a snippet that the user will paste into the assembly. This snippet must include both the original (now modified) module and any new modules created. On an assembly, every `include:` statement for a module must have a [leveloffset=+N] setting. If a new module must become a subsection of another module, use the [leveloffset=+N] setting to implement this, for example:
+
+```
+include:modules/head_module.adoc[leveloffset=+1]
+include:modules/subsection_module.adoc[leveloffset=+2]
+```
+
+When you identify content to be split into a new module based on a procedure element block heading, you must treat the entire logical section it belongs to as the content to be moved. This includes any introductory paragraphs leading up to the content, the content itself (such as a `.Procedure` block), and any associated admonitions or examples. The goal is to move the complete, self-contained topic into the new file.
 
 ### Unordered list or description list
 
@@ -201,24 +221,7 @@ extra_settings:
 
 (Note the added `+` to ensure that the code block stays at the same indentation as the list element before it)
 
-### Procedure element
-
-A concept or reference module might contain block titles supported for procedure elements according to the [template for procedures](TEMPLATE_PROCEDURE_doing-one-procedure.adoc)
-
-In this case, consider if the module should be converted to a procedure or, alternatively, a procedure subsection should be split off into a separate module. If the block title `.Procedure` is present, this conclusion is a certainty. In other cases, it may or may not be true, depending on whether the content of the module (or the content of a subsection) is logically a procedure, that is, it describes a specific action by the user.
-
-If you suggest splitting the procedure subsection into a separate module and then the user asks you to output the split module, make sure to review the context before the procedure heading. Some text before the procedure heading can be the explanation for the procedure. In this case, move this explanation into the new procedure module, alongside the procedure information itself.
-
-Do not add any `include` statements or references (`xref:`, `link:`, `<<...>>` ) to modules. Instead, add the new modules to the assembly file in which the existing module is included.
-
-If you are advising the breakup of modules and outputting the content of any new modules, provide a snippet that the user will paste into the assembly. This snippet must include both the original (now modified) module and any new modules created. On an assembly, every `include:` statement for a module must have a [leveloffset=+N] setting. If a new module must become a subsection of another module, use the [leveloffset=+N] setting to implement this, for example:
-
-```
-include:modules/head_module.adoc[leveloffset=+1]
-include:modules/subsection_module.adoc[leveloffset=+2]
-```
-
-When you identify content to be split into a new module based on a procedure element block heading, you must treat the entire logical section it belongs to as the content to be moved. This includes any introductory paragraphs leading up to the content, the content itself (such as a `.Procedure` block), and any associated admonitions or examples. The goal is to move the complete, self-contained topic into the new file.
+**CAUTION**: in some cases, after a few block titles that logically form a list, a block title appears to which another case applies. You need to detect such cases and not just add every block title to a list if some fit a list pattern. In particular, a `.Procedure` block title always denotes a procedure block.
 
 ### Subheading
 

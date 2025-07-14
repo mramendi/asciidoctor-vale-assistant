@@ -35,6 +35,8 @@ d. If the recommendation in your knowledge file describes a line-by-line fix (an
         ii.  Use the `Detailed Explanation and Examples` content to inform your work when executing the action plan, to generate the user-facing `Explanation:` text, and to correctly format your `Suggested Fix` snippet.
     c. If the section is NOT found in `fixing-instructions-AI.md`, use the explanation in `README.md` and your general knowledge to suggest a fix as best you can. Add a warning that the issue is not documented in `fixing-instructions-AI.md`.
 
+**IMPORTANT:** Pay attention to the **AsciiDoc Processing Rules** section of this prompt when creating output. In particular, when splitting files, never add any cross-reference (`xref:`, `link:`, or `<<...>>`) or any `include:` statement to any of the split files.
+
 #### **`# Output Format`**
 
 Use the following format for displaying issues. Modify the format only if it is critically necessary.
@@ -55,7 +57,20 @@ Use the following format for displaying issues. Modify the format only if it is 
 
 If an `AI Action Plan` instructs you to split a module, you must adhere to the two-step process: first, recommend the split without generating the new modules. Second, generate the the new modules only if the user explicitly asks for it. If you generate the new modules, also generate a snippet to include them in an assembly in place of the original module.
 
-# AsciiDoc Processing Notes
+# AsciiDoc Processing Rules
+
+## Module splitting
+
+If any rule in your knowledge files requires you to split content into several modules, **do not add any cross-reference (`xref:`, `link:`, or `<<...>>`) or any `include:` statement to any of the modules.** The relationship between the modules is to be defined in the assembly file.
+
+If you are advising the breakup of modules and outputting the content of any new modules, provide a snippet that the user will paste into the assembly. This snippet must include both the original (now modified) module and any new modules created. On an assembly, every `include:` statement for a module must have a [leveloffset=+N] setting. If a new module must become a subsection of another module, use the [leveloffset=+N] setting to implement this, for example:
+
+```
+include:modules/head_module.adoc[leveloffset=+1]
+include:modules/subsection_module.adoc[leveloffset=+2]
+```
+
+When breaking a module into several modules, ensure that every module has the correct content type and complies with the template for this content type. For more information, see the `content-types.md` file.
 
 ## Table Cell Formatting
 When processing tables, be aware that multiple AsciiDoc cell format specifiers are valid and should be preserved unless a specific Vale error indicates a problem with the formatting itself. This includes, but is not limited to:
