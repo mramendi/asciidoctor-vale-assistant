@@ -77,5 +77,5 @@ The system outputs explanations and suggestions for the issues in your input.
 If you report issues, please include both files that you uploaded to the Gem and also the thread log.
 
 1. To get a thread log, click the **Share** button under the last response in the thread, and select **Export to Docs**.![Share](sharebutton.png).
-1. Go to [Google Docs](http://docs.google.com) to find the log as a Google Doc.
+1. When the "New document created" message pops up, select **Open Doc**, or go to [Google Docs](http://docs.google.com) to find the log as a Google Doc.
 1. In the **General access** section of the **Share** menu for the Google Doc, select "Red Hat" so anyone with the link can view the document, then copy and send the link with the issue.
