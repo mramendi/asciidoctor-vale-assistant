@@ -32,7 +32,7 @@ The procedures were tested on an enterprise Google account that includes paid Ge
 ![New Gem window](create-new-gem.png)
 1. In the **Name** field, specify `Asciidoctor Vale correction`.
 1. Under **Knowledge**, click the `+` button.
-1. In the file selection dialog, navigate to the `assistant` subdirectory of this repository, and then select all the displayed files _except_ `gem-prompt.md`, `get-files.sh`, and `.gitignore`. 
+1. In the file selection dialog, navigate to the `assistant` subdirectory of this repository, and then select all the displayed files _except_ `gem-prompt.md`, `get-files.sh`, and `.gitignore`.
 ![Selecting files](select-files.png)
 1. Click **Open** to upload the files.
 1. Open the `gem-prompt.md` file in a text editor, for example:
@@ -69,12 +69,13 @@ We use `module.adoc` as the example name for your Asciidoc file.
 1. In the prompt window, use the `+` button to upload the Vale output file (`module.vale.txt`) and the numbered version of the original file (`module.adoc.numbered.txt`).
 1. Enter a brief prompt, for example, `Let's Go!`, and then press Enter.
 The system outputs explanations and suggestions for the issues in your input.
+1. Optional: If the assistant proposes breaking up the module, enter a follow-on prompt, such as `Output the content of the split modules`. The assistant outputs the split modules and a snippet for including tham in the assembly. **You must verify that the new content matches the content of the existing module**.
 1. Start a new thread with the Gem to work on another file.
 
 ## Reporting issues
 
 If you report issues, please include both files that you uploaded to the Gem and also the thread log.
 
-1. To get a thread log, click the **Share** button under the last response in the thread, and select **Export to Docs**.![Share](sharebutton.png). 
-1. Go to [Google Docs](http://docs.google.com) to find the log as a Google Doc. 
+1. To get a thread log, click the **Share** button under the last response in the thread, and select **Export to Docs**.![Share](sharebutton.png).
+1. Go to [Google Docs](http://docs.google.com) to find the log as a Google Doc.
 1. In the **General access** section of the **Share** menu for the Google Doc, select "Red Hat" so anyone with the link can view the document, then copy and send the link with the issue.
