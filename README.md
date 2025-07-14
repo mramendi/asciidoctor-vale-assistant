@@ -69,7 +69,7 @@ We use `module.adoc` as the example name for your Asciidoc file.
 1. In the prompt window, use the `+` button to upload the Vale output file (`module.vale.txt`) and the numbered version of the original file (`module.adoc.numbered.txt`).
 1. Enter a brief prompt, for example, `Let's Go!`, and then press Enter.
 The system outputs explanations and suggestions for the issues in your input.
-1. Optional: If the assistant proposes breaking up the module, enter a follow-on prompt, such as `Output the content of the split modules`. The assistant outputs the split modules and a snippet for including tham in the assembly. **You must verify that the new content matches the content of the existing module**.
+1. If the assistant proposes that you split the module, enter an additional prompt, such as `Split this content into multiple modules`, to have the assistant generate the modules and snippet to include them in the assembly. **You must verify that the new content matches the content of the existing module**.
 1. Start a new thread with the Gem to work on another file.
 
 ## Reporting issues
