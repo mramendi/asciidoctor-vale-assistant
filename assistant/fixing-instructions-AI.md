@@ -364,7 +364,7 @@ For working out content types for your files, especially if you need to determin
 
 It is usually not possible to work out the correct cross-reference by looking just at the content of one file. (The only exception is if the reference is to an ID defined in the file itself).
 
-Do not remove cross-references (`xref:` or `<< ... >>` markup) because of this warning. There are two suggested solutions, and both must be carried out for an entire documentation set as opposed to a single module:
+Do not remove cross-references (`xref:` or `<<...>>` markup) because of this warning. There are two suggested solutions, and both must be carried out for an entire documentation set as opposed to a single module:
 
 * You can use the [mod-docs-cross-reference script](https://github.com/rheslop/asciidoc-dita-toolkit/blob/main/asciidoc_dita_toolkit/asciidoc_dita/plugins/mod-docs-cross-reference.py) to fix all the cross-references in a doc set, then run Vale again to ensure no unsupported cross-references remain.
 
@@ -548,13 +548,48 @@ Correction:
 |===
 ```
 
+## LinkAttribute
+
+**AI action plan**
+**Group**
+* Display an explanation that the user must either replace the link target manually or else resolve the attribute by using the `-a <attribute>=<value>` command-line option during the `asciidoctor` stage of the DITA conversion. **Include the name of any used attribute in the explanation**.
+* Do not suggest fixes
+
+**Detail**
+
+DITA does not support using attributes as _a part of_ a link target. To convert to DITA correctly, a link target in the AsciiDoc source either must not include an attribute or alternatively the entire link must just be one attribute.
+
+Correct example:
+
+`link:https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8[RHEL 8 documentation]`
+
+Correct example:
+
+`link:{rhel_8_docs}[RHEL 8 documentation]`
+
+Failure:
+
+`link:{red_hat_docs}/red_hat_enterprise_linux/8[RHEL 8 documentation]`
+
+An AI cannot solve this issue and must not suggest changes. The writer must solve this issue in one of the following ways:
+
+* Replace the failing link target with a correctly formatted link target
+
+* At the `asciidoctor` conversion stage, use the `-a <attribute>=<value>` command-line option to define the value of the attribute that is a part of the link. In this case, Asciidoctor automatically replaces the attribute with its value in the DITA output. For the failure example in this section, use the following `asciidoctor` command-line option:
+
+```
+-a red_hat_docs="https://docs.redhat.com/en/documentation"
+```
+
+If you are an AI handling the `LinkAttribute` warning, list all the instances of this warning in a file together, provide this explanation **necessarily including the _names_ of the attributes that are included in the links**, and do not recommend any other action for this warning.
+
 ## TaskStep
 
 **AI action plan**
 * Analyse the content from this line to the next block title, for example, `.Results`, or to the end of the file if there is no following block title. You must understand if it is still a part of the procedure, and if so, how to join it into the ordered or unordered list of steps.
 * If the content continues the list but has one or several line breaks that cause the issue, fix the AsciiDoc list by using the `+` line break symbol on its own line  
 * If some of the content has conceptual subtitles, for example using bold text, and lists actions under them, convert these subtitles into an unordered list of substeps, or an ordered list if they have numbers.
-* If the content continues the procedure conceptually but is not formatted into steps or substeps, attempt to reformat is into steps and substeps as necessary, and ensure they are joined to the existing ordered or unordered AsciiDoc list of steps. You can use the `+` line break symbol on its own line and the AsciiDoc open block, denoted by `--` lines, to ensure correct AsciiDoc as necessary.
+* If the content continues the procedure conceptually but is not formatted into steps or substeps, attempt to reformat it into steps and substeps as necessary, and ensure they are joined to the existing ordered or unordered AsciiDoc list of steps. You can use the `+` line break symbol on its own line and the AsciiDoc open block, denoted by `--` lines, to ensure correct AsciiDoc as necessary.
 * After joining the content into the single list of steps, you MUST check if the resulting list has only one top-level step. If it does, you must make that list unordered (using `*`) to comply with the procedure template.
 * If the content does not continue the procedure conceptually, use one of the supported block titles, as defined in [the procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt), to separate the content from the procedure steps.
 
