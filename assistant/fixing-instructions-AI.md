@@ -366,21 +366,34 @@ For working out content types for your files, especially if you need to determin
 
 **AI action plan**
 **Group**
-* Display an explanation, critically including the links to suggested utilities
+* Display an explanation
 * Do not suggest fixes
 
 **Detail**
 
+Cross-references that reference AsciiDoc files do convert clearnly to DITA. Cross-references that reference only an ID do not convert clearly and therefore cause this warning.
+
+Correct cross-reference:
+
+```
+xref:../assemblies/assembly_other.adoc#important[important information]
+```
+
+Failure:
+
+```
+xref:important[important information]
+```
 
 It is usually not possible to work out the correct cross-reference by looking just at the content of one file. (The only exception is if the reference is to an ID defined in the file itself).
 
-Do not remove cross-references (`xref:` or `<<...>>` markup) because of this warning. There are two suggested solutions, and both must be carried out for an entire documentation set as opposed to a single module:
+Do not remove cross-references (`xref:` or `<<...>>` markup) because of this warning. Instead, writers must work out a solution:
 
-* You can use the [mod-docs-cross-reference script](https://github.com/rheslop/asciidoc-dita-toolkit/blob/main/asciidoc_dita_toolkit/asciidoc_dita/plugins/mod-docs-cross-reference.py) to fix all the cross-references in a doc set, then run Vale again to ensure no unsupported cross-references remain.
+* They can replace the cross-references with the supported file-based format. They can use the [mod-docs-cross-reference script](https://github.com/rheslop/asciidoc-dita-toolkit/blob/main/asciidoc_dita_toolkit/asciidoc_dita/plugins/mod-docs-cross-reference.py) to fix all the cross-references in a doc set. After making this change they must run Vale again to ensure no unsupported cross-references remain.
 
-* You can ignore the warnings, complete the conversion to DITA, and then use the [fix-dita-links](https://github.com/jhradilek/fix-dita-links) script to change the links into the correct format after the conversion.
+* Alternatively, tey can agree with the conversion team to handle these issues in the conversion process. In that case they can ignore the warnings, but must ensure that the cross-references render correctly in Asciidoc.
 
-If you are an AI handling the `CrossReference` warning, list all the instances of this warning in a file together, provide this explanation **necessarily including the _links_ to the suggested solutions**, and do not recommend any other action for this warning.
+If you are an AI handling the `CrossReference` warning, list all the instances of this warning in a file together, provide this explanation including both options of what writers can do, and do not recommend any other action for this warning.
 
 ## LineBreak
 
@@ -562,12 +575,12 @@ Correction:
 
 **AI action plan**
 **Group**
-* Display an explanation that the user must either replace the link target manually or else resolve the attribute by using the `-a <attribute>=<value>` command-line option during the `asciidoctor` stage of the DITA conversion. **Include the name of any used attribute in the explanation**.
+* Display an explanation that the user must either replace the link target manually or else give the conversion team a list of the atributes and their values to resolve the matter at conversion time. **Include the name of any used attribute in the explanation**.
 * Do not suggest fixes
 
 **Detail**
 
-DITA does not support using attributes as _a part of_ a link target. To convert to DITA correctly, a link target in the AsciiDoc source either must not include an attribute or alternatively the entire link must just be one attribute.
+DITA does not support using attributes as _a part of_ a link target. To convert to DITA correctly, a link target in the AsciiDoc source either must not include an attribute or alternatively the entire link macro must just be one attribute.
 
 Correct example:
 
@@ -585,11 +598,7 @@ An AI cannot solve this issue and must not suggest changes. The writer must solv
 
 * Replace the failing link target with a correctly formatted link target
 
-* At the `asciidoctor` conversion stage, use the `-a <attribute>=<value>` command-line option to define the value of the attribute that is a part of the link. In this case, Asciidoctor automatically replaces the attribute with its value in the DITA output. For the failure example in this section, use the following `asciidoctor` command-line option:
-
-```
--a red_hat_docs="https://docs.redhat.com/en/documentation"
-```
+* Give the names and values of the attributes to the conversion team to handle the matter at the time of conversion
 
 If you are an AI handling the `LinkAttribute` warning, list all the instances of this warning in a file together, provide this explanation **necessarily including the _names_ of the attributes that are included in the links**, and do not recommend any other action for this warning.
 
