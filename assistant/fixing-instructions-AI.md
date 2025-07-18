@@ -21,6 +21,8 @@ Replace the unsupported entity reference(s) with a [built-in AsciiDoc attributes
 
 If your files have many unsupported entity references, consider using the [AsciiDoc DITA Toolkit](https://github.com/rheslop/asciidoc-dita-toolkit/tree/main) to replace them in all the files at once.
 
+The five standard XML entity references (`&amp;`, `&lt;`, `&gt;`, `&apos;`, `&quot;`) are supported. Do not replace them.
+
 ## ExampleBlock
 
 **AI action plan**
@@ -37,13 +39,15 @@ Note that block titles in example blocks must also be removed. Often, the block 
 ## NestedSection
 
 **AI action plan**
-* Determine if the file is an assembly. A `:_mod-docs-content-type: assembly` definition means the file is an assembly. If no `_mod-docs-content-type` attribute is defined, the file is likely an assembly if it has "assembly" in its name and/or if it has several `include:` directives that include a `[leveloffset=...]` setting.
-* If the file IS an assembly, check if the `:_mod-docs-content-type: assembly` definition is in the file, if it is not, recommend adding it. No other change to an assembly is required for this issue.
+* Determine if the file is an assembly. A `:_mod-docs-content-type: ASSEMBLY` definition means the file is an assembly. If no `_mod-docs-content-type` attribute is defined, the file is likely an assembly if it has "assembly" in its name and/or if it has several `include:` directives that include a `[leveloffset=...]` setting.
+* If the file IS an assembly, check if the `:_mod-docs-content-type: ASSEMBLY` definition is in the file, if it is not, recommend adding it. Also, if there are subsections in the assembly text marked with a third level heading (`===`) or a higher level heading, recommend that the user consider either flattening the structure or splitting the assembly. As an AI, **do not suggest specific candidate text for splitting** in the case of assemblies, because conceptual information in assemblies normally requires manual review for rerganizing it.
 * If the file IS NOT an assembly, recommend splitting subsections into separate modules.
 
 **Detail**
 
-If the AsciiDoc file is an assembly, this limitation does not apply. An assembly file often, but not always, has `assembly` in its name. To comply with the templates, it must have a `:_mod-docs-content-type: assembly` attribute definition at the start of the file. If the `NestedSection` error is reported for an assembly, ensure that the `:_mod-docs-content-type: assembly` attribute definition is present.
+If the AsciiDoc file is an assembly, this limitation applies only to text present in the assembly itself and not to modules included in the assembly. An assembly file often, but not always, has `assembly` in its name. To comply with the templates, it must have a `:_mod-docs-content-type: ASSEMBLY` attribute definition at the start of the file.
+
+If the `NestedSection` error is reported for an assembly, ensure that the `:_mod-docs-content-type: ASSEMBLY` attribute definition is present. Then recomment **manual** review, in order to either flatten the structure to limit it to second-level headings or else to split the assembly. This decision must be made by the writer, because it involves a wider context than just the assembly file.
 
 AsciiDoc files which are not assemblies are normally modules. If a module contains headings of level 3 or deeper (so with the AsciiDoc prefix of `===` or more), you must break the file into several modules. Typically, you will need to move sections of the file (level 2 headings, `==` Asciidoc prefix) into their own modules.
 
@@ -142,7 +146,7 @@ Take the following steps to care for floppy disks:
 
 **AI action plan**
 
-Determine if the module is a procedure. A procedure has a `:_mod-docs-content-type: procedure` definition close to the start of the file.
+Determine if the module is a procedure. A procedure has a `:_mod-docs-content-type: PROCEDURE` definition close to the start of the file.
 
 Then work through several possibilities:
 
@@ -155,7 +159,9 @@ Then work through several possibilities:
 
 **Detail**
 
-Block titles (`.Block title` in AsciiDoc) are widely used (and abused) for many different cases in existing documentation. Carefully review the context of the block title (sometimes a considerable number of lines before and after it) to work out its meaning, and then adjust the text to represent the meaning without a block title.
+Block titles (`.Block title` in AsciiDoc) are widely used (and abused) for many different cases in existing documentation. However, for DITA conversion, block titles are supported only if they are attached to tables, images (`image::`), and example blocks (`[example]`). Block titles for other cases, including paragraphs and code blocks, are not supported for DITA conversion, and such use of block titles triggers the `BlockTitle` Vale issue.
+
+Carefully review the context of the block title (sometimes a considerable number of lines before and after it) to work out its meaning, and then adjust the text to represent the meaning without a block title.
 
 There are several typical situations. If none of the situations fit, work out other ways of representing the content.
 
@@ -335,15 +341,19 @@ ls -l *.adoc
 
 * Attempt to determine and suggest the content type based on the `content-types.md` file. If you can determine it, add the content type definition at the start of the file.
 
-* If the meaning of the text leads to a content type of `procedure`, you must **immediately and in the same response** perform a full structural validation of the file against the [procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt). **Proactively identify and suggest fixes for any structural issues (such as potential `TaskStep` or `TaskSection` violations), even if they were not reported in the initial Vale report.** Modify the content as necessary to ensure full compliance with the template and combine all fixes into a single response. If you must generate an introduction from scratch because one is missing, describe what the user will accomplish and do not use self-referential phrases like "This procedure describes...".
+* If the meaning of the text leads to a content type of `PROCEDURE`, you must **immediately and in the same response** perform a full structural validation of the file against the [procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt). **Proactively identify and suggest fixes for any structural issues (such as potential `TaskStep` or `TaskSection` violations), even if they were not reported in the initial Vale report.** Modify the content as necessary to ensure full compliance with the template and combine all fixes into a single response. If you must generate an introduction from scratch because one is missing, describe what the user will accomplish and do not use self-referential phrases like "This procedure describes...".
 
 **Detail**
 
-Every AsciiDoc assembly or module must have a content type, defined as the `_mod-docs-content-type` attribute close to the start of the file, ideally on the first line. See the `content-types.md` file for details.
+Every AsciiDoc assembly or module must have a content type, defined as the `_mod-docs-content-type` attribute close to the start of the file, ideally on the first line. See the `content-types.md` file for details. The value of the `_mod-docs-content-type` attribute is not case-sensitive, but for consistency, when recommending a new `_mod-docs-content-type` value, use UPPERCASE: `CONCEPT`, `PROCEDURE`, `REFERENCE`, `ASSEMBLY`.
+
+Another supported `_mod-docs-content-type` value is `SNIPPET`. It is reserved for files that are neither assemblies nor modules, but contain reusable text that is included in different modules using `include::` directives. As an AI, if you suspect the file might be a snippet, point out this possibility to the user. In this case, the user must make the decision whether it is a snippet, because you cannot work this fact out confidently from the content of just one file.
+
+Instead of `_mod_docs_content_type`, some files can contain one of the older-version attributes with the same values and meaning: `_content_type` or `_module_type`. Never recommend these attributes for new addition, but if one of these attributes already exists, you do not need to replace it with `_mod_docs_content_type`.
 
 When choosing a content type for the file, consider the information that is in the file.
 
-If the content type is `procedure`, you must also edit the file to ensure it fits the [procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt). In particular:
+If the content type is `PROCEDURE`, you must also edit the file to ensure it fits the [procedure template](TEMPLATE_PROCEDURE_doing-one-procedure.adoc.txt). In particular:
 
 * No subheadings or subsections are allowed
 * Only the listed set of block titles is allowed
@@ -565,7 +575,7 @@ Correct example:
 
 Correct example:
 
-`link:{rhel_8_docs}[RHEL 8 documentation]`
+`:rhel_8_docs: link:https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/8[RHEL 8 documentation]`
 
 Failure:
 
