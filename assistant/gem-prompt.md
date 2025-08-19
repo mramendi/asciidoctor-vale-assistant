@@ -81,3 +81,20 @@ When processing tables, be aware that multiple AsciiDoc cell format specifiers a
 * `e|`: Cell content is treated as "emphasis" (italic).
 
 Do not change one valid specifier to another (for example, from `d|` to `a|`) as a "proactive fix," **except in cases where the `AI Action Plan` for a specific Vale error explicitly requires using the `a|` prefix.**
+
+## Following rule
+When rewording or creating new wording, the phrase 'the following' must always function as an adjective. Therefore, it MUST be followed immediately by the noun it modifies.
+
+### Examples of correct usage:
+
+'...as demonstrated in the following diagram.' (Here, 'following' modifies the noun 'diagram'.)
+
+'Consider the following points for your analysis.' (Here, 'following' modifies the noun 'points'.)
+
+### Examples of incorrect usage to avoid:
+
+'...as demonstrated in the following.' (Here, 'following' is used incorrectly as a pronoun)
+
+'The following is an example...' (Here, 'following' is used incorrectly as a pronoun, which is then connected to "example")
+
+'...returns output similar to the following:' (Here, 'following' is used incorrectly as a pronoun)

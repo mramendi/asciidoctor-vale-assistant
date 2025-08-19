@@ -152,10 +152,11 @@ Then work through several possibilities:
 
 * **If the specific block title is `.Procedure` and the module's content type is NOT `procedure`**, always complete the following action: analyze the entire module and suggest either converting the module to a procedure or splitting the procedure part into another module. **In this specific case do not proceed to other rules.**
 * If the module's content type is not `procedure` and the block title is one of block titles supported for procedure elements according to the [template for procedures](TEMPLATE_PROCEDURE_doing-one-procedure.adoc), analyze the entire module to see if the module or a part of it is a procedure. If it is, suggest either converting the module to a procedure or splitting the procedure part into another module.
+* If the block title is `.Example` or `.Examples` and it is the onl;y block of this type in a module (or `Example of something` when the module containt only one example like that), change the content under this title into a single AsciiDoc `[example]` block. The block title `.Example` is supported when it covers a single example block. **You must not add more than one example block per file. Also, an example block must not be a part of a list, for example, it must not be joined to a list using a + sign. If you need to handle multiple examples, reword the headings as in the "heading to a block" option**.
 * If several block titles in succession represent a list, change to an unordered list or description list. **However, if `.Procedure` is one of the block titles in the sequence, do not apply this fix to the `.Procedure` block title. Use the specific rule for the `.Procedure` block title.** You can still apply the list fix to other block titles.
 * If the module is not a procedure and the block title is where a subheading should logically be: if this would be a second level subheading (`==`), suggest converting the block title to a subheading. Otherwise, suggest splitting the module.
 * If the module is a procedure and the block title is where a subheading should logically be: suggest splitting the module.
-* If the block title is used as the heading to a block, typically a code block, reword the heading to add it into the normal text preceding the block, preserving the flow of text and of any AsciiDoc framing. In particular, if the text adds a paragraph and the block is in a list, you must use the `+` sign on its own line to join the block to the list.  
+* If the block title is used as the heading to a block, typically a code block, reword the heading to add it into the normal text preceding the block, preserving the flow of text and of any AsciiDoc framing. In particular, if the text adds a paragraph and the block is in a list, you must use the `+` sign on its own line to join the block to the list. When rewording, remember the "Following rule". Do not remove any example content.
 
 **Detail**
 
@@ -185,6 +186,117 @@ include:modules/subsection_module.adoc[leveloffset=+2]
 ```
 
 When you identify content to be split into a new module based on a procedure element block heading, you must treat the entire logical section it belongs to as the content to be moved. This includes any introductory paragraphs leading up to the content, the content itself (such as a `.Procedure` block), and any associated admonitions or examples. The goal is to move the complete, self-contained topic into the new file.
+
+### Example
+
+The block title `.Example` or `.Examples` covers an example subsection that is actually supported in DITA, if this is the only example subsection in the file. However, for the conversion to work, this subsection must be a single `[example]` block. In this case, convert the content to an `[example]` block and use the `.Example` block title for this block.
+
+Failure:
+
+```
+.Examples
+
+The following example pipeline run references a remote pipeline from a catalog:
+
+[source,yaml]
+----
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: hub-pipeline-reference-demo
+spec:
+  pipelineRef:
+    resolver: hub
+    params:
+# ...
+----
+
+The following example pipeline references a remote task from a catalog:
+
+[source,yaml]
+----
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: pipeline-with-hub-task-reference-demo
+spec:
+  tasks:
+  # ...
+----
+```
+
+Correction:
+
+```
+.Example
+[example]
+====
+The following example pipeline run references a remote pipeline from a catalog:
+
+[source,yaml]
+----
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: hub-pipeline-reference-demo
+spec:
+  pipelineRef:
+    resolver: hub
+    params:
+# ...
+----
+
+The following example pipeline references a remote task from a catalog:
+
+[source,yaml]
+----
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: pipeline-with-hub-task-reference-demo
+spec:
+  tasks:
+  # ...
+----
+====
+```
+
+Failure: (the module has a single block like this)
+
+```
+.Example {pac} pipeline run definition
+[source,yaml]
+----
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: maven-build
+annotations:
+  pipelinesascode.tekton.dev/task: "[git-clone]"
+  # ...
+```
+
+Correction:
+
+```
+.Example
+[example]
+====
+The following example shows a {pac} pipeline run definition:
+
+[source,yaml]
+----
+apiVersion: tekton.dev/v1
+kind: PipelineRun
+metadata:
+  name: maven-build
+annotations:
+  pipelinesascode.tekton.dev/task: "[git-clone]"
+  # ...
+====
+```
+
+**You must not add more than one example block per file. Also, an example block must not be a part of a list, for example, it must not be joined to a list using a + sign. If you need to handle multiple examples, reword the headings as in the "heading to a block" option**.
 
 ### Unordered list or description list
 
@@ -246,7 +358,7 @@ When breaking a module into several modules, ensure that every module has the co
 
 ### Proper block heading
 
-Sometimes a block title is literally the heading to a block, typically a code block. In this case, reword the heading into normal text, as in the following example:
+Sometimes a block title is literally the heading to a block, typically a code block. In this case, reword the heading into normal text, as in the following example. **When rewording, you MUST strictly adhere to the "Following rule" defined in your main prompt.** Do not remove any example content.
 
 Failure:
 
@@ -279,6 +391,9 @@ The output of this command is:
 file1  file2
 ----
 ```
+
+
+
 
 If this case happens inside some AsciiDoc structure, make sure to keep that structure intact. In particular, a block with a title can happen inside a list. If your rewording becomes a new paragraph, you must use the `+` sign on its own line to join the block to the list, as in the following example:
 
@@ -606,6 +721,7 @@ If you are an AI handling the `LinkAttribute` warning, list all the instances of
 
 **AI action plan**
 * Analyse the content from this line to the next block title, for example, `.Results`, or to the end of the file if there is no following block title. You must understand if it is still a part of the procedure, and if so, how to join it into the ordered or unordered list of steps.
+* If the error line number is inside a table definition and is an empty line between table rows, this is a false positive in the current version of Vale. Remove the empty line and any other emplty lines before the table rows, this change should not change the content of the table. Do not change the table and do not remove the block title of the table. Also try to detect any valid breaks in the AsciiDoc list and fix them.
 * If the content continues the list but has one or several line breaks that cause the issue, fix the AsciiDoc list by using the `+` line break symbol on its own line  
 * If some of the content has conceptual subtitles, for example using bold text, and lists actions under them, convert these subtitles into an unordered list of substeps, or an ordered list if they have numbers.
 * If the content continues the procedure conceptually but is not formatted into steps or substeps, attempt to reformat it into steps and substeps as necessary, and ensure they are joined to the existing ordered or unordered AsciiDoc list of steps. You can use the `+` line break symbol on its own line and the AsciiDoc open block, denoted by `--` lines, to ensure correct AsciiDoc as necessary.
@@ -718,3 +834,5 @@ Correction:
 
 Your files are backed up.
 ```
+
+**IMPORTANT: if the new `Result` or similar section would start with an admonition, such as [NOTE] or [WARNING], you must add a short phrase describing the result of the procedure before the admonition. Placing the block title immediately above an admonition causes another error.**
