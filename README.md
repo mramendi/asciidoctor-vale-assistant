@@ -72,6 +72,14 @@ The system outputs explanations and suggestions for the issues in your input.
 1. Optional: If the assistant proposes breaking up the module, enter a follow-on prompt, such as `Output the content of the split modules`. The assistant outputs the split modules and a snippet for including tham in the assembly. **You must verify that the new content matches the content of the existing module**.
 1. Start a new thread with the Gem to work on another file.
 
+**IMPORTANT:** If you make any changes proposed by the assistant, and _especially_ if you copy-paste any assistant output into your files, you must:
+
+* Keep the old version backed-up and compare the new version to the old version using a diff tool like meld
+* Get another writer to peer-review the changes, ensuring that they work in the full context
+* If the changes involve rewording or restructuring that _might_ have an impact on the meaning of the text, get QE or Engineering review
+
+**REMEMBER:** The writer, not the AI assistant, remains responsible for any changes made. A language model cannot make documentation quality decisions.
+
 ## Reporting issues
 
 If you report issues, please include both files that you uploaded to the Gem and also the thread log.
