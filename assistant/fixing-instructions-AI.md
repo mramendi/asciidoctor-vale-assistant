@@ -28,11 +28,11 @@ The five standard XML entity references (`&amp;`, `&lt;`, `&gt;`, `&apos;`, `&qu
 
 **AI action plan**
 **Group**
-* The issue is an information message, not requiring a fix. it informs the user that there is an atteibute reference, such as `{attribute}`, in the text.
+* The issue is an information message, not requiring a fix. it informs the user that there is an attribute reference, such as `{attribute}`, in the text.
 
 **Detail**
 
-The user must discuss with the conversion team which of the attribuets in the document are to be resolved (changed to normal text) in the conversion and whoch of the attributes must refer to DITA shared content.
+The user must discuss with the conversion team which of the attributes in the document are to be resolved (changed to normal text) in the conversion and which of the attributes must refer to DITA shared content.
 
 ## AuthorLine
 
@@ -41,9 +41,9 @@ The user must discuss with the conversion team which of the attribuets in the do
 
 **Detail**
 
-In an Asciidoc file, there must be a blank line between a document title (top-level section heading) and the text that follows it. Asciidoc ingterprets a non-blank line immediately following a document title as the author line. The DITA conversion process does not support author lines.
+In an Asciidoc file, there must be a blank line between a document title (top-level section heading) and the text that follows it. Asciidoc interprets a non-blank line immediately following a document title as the author line. The DITA conversion process does not support author lines.
 
-In modular documentation, real author lines are never used. So the issue means that the writer did not add a blabnk line after the document title. To fix the issue, add this blank line. 
+In modular documentation, real author lines are never used. So the issue means that the writer did not add a blank line after the document title. To fix the issue, add this blank line. 
 
 ## DocumentId
 
@@ -85,7 +85,7 @@ Every module or assembly file in Asciidoc modular documentation must have a docu
 
 If this document title is not present, Vale reports the `DocumentTitle` issue.
 
-To fix the problem, add the title (first-level section heading, starting with a single `=` marker) immediately after the setting of the `id` attribute. Ensure the title reflects the contenf of the documemnt. The user must verify that the title is appropriate.
+To fix the problem, add the title (first-level section heading, starting with a single `=` marker) immediately after the setting of the `id` attribute. Ensure the title reflects the content of the document. The user must verify that the title is appropriate.
 
 If the file is in fact a snippet, that is, it is intended for inclusion inside modules, a title is not required. In this case, the user must add a `_mod-doc-content-type: SNIPPET` definition at the start of the file.
 
@@ -118,7 +118,7 @@ Otherwise, suggest a new short description paragraph with this block attribute.
 ## ExampleBlock
 
 **AI action plan**
-* Analyse the example block and convert to normal text or a code block as appropriate
+* Analyze the example block and convert to normal text or a code block as appropriate
 * If the preceding text does not mention an example, add a part such as "as in the following example". as appropriate, maintaining text flow
 * If the example block title contains information absent in the preceding text, add this information to the text, maintaining text flow
 
@@ -131,7 +131,7 @@ Note that block titles in example blocks must also be removed. Often, the block 
 ## TaskExample
 
 **AI action plan**
-* Analyse the extra example blocks, including any example blocks within the steps of the procedure, and convert to normal text or code blocks as appropriate. Ensure that any blocks or any additional paragraphs in steps are added to the list items using the `+` joiner line.
+* Analyze the extra example blocks, including any example blocks within the steps of the procedure, and convert to normal text or code blocks as appropriate. Ensure that any blocks or any additional paragraphs in steps are added to the list items using the `+` joiner line.
 * If the content is actually a code block but the `====` delimiter is used, change it to the correct `----` delimiter at both the start and the end of the block. if it is a part of a procedure step, ensure it is joined to the step using the `+` joiner.
 * If the preceding text does not mention an example, add a part such as "as in the following example". as appropriate, maintaining text flow
 * If the example block title contains information absent in the preceding text, add this information to the text, maintaining text flow
@@ -140,7 +140,7 @@ Note that block titles in example blocks must also be removed. Often, the block 
 
 Only one example block can be present in a procedure. Moreover, this example block must not be a part of a step. 
 
-Example blocks in steps body can usually be converted to normal text or, when they represent code or commands, to code blocks. Beacuse a step is always a list item, text paragraphs or code blocks must be joined to the list item using the `+` joiner.  If the preceding text does not make it clear that an example comes next, modify the preceding text to explain it, for example, by adding `See the following example:`
+Example blocks in steps body can usually be converted to normal text or, when they represent code or commands, to code blocks. Because a step is always a list item, text paragraphs or code blocks must be joined to the list item using the `+` joiner.  If the preceding text does not make it clear that an example comes next, modify the preceding text to explain it, for example, by adding `See the following example:`
 
 Sometimes the intended type is a code block but the `====` delimiter is used instead of the correct `----` delimiter. In this case, change the delimited at both the start and the end of the block.
 
@@ -151,14 +151,14 @@ Note that block titles in example blocks must also be removed. Often, the block 
 
 **AI action plan**
 * Determine if the file is an assembly. A `:_mod-docs-content-type: ASSEMBLY` definition means the file is an assembly. If no `_mod-docs-content-type` attribute is defined, the file is likely an assembly if it has "assembly" in its name and/or if it has several `include:` directives that include a `[leveloffset=...]` setting.
-* If the file IS an assembly, check if the `:_mod-docs-content-type: ASSEMBLY` definition is in the file, if it is not, recommend adding it. Also, if there are subsections in the assembly text marked with a third level heading (`===`) or a higher level heading, recommend that the user consider either flattening the structure or splitting the assembly. As an AI, **do not suggest specific candidate text for splitting** in the case of assemblies, because conceptual information in assemblies normally requires manual review for rerganizing it.
+* If the file IS an assembly, check if the `:_mod-docs-content-type: ASSEMBLY` definition is in the file, if it is not, recommend adding it. Also, if there are subsections in the assembly text marked with a third level heading (`===`) or a higher level heading, recommend that the user consider either flattening the structure or splitting the assembly. As an AI, **do not suggest specific candidate text for splitting** in the case of assemblies, because conceptual information in assemblies normally requires manual review for reorganizing it.
 * If the file IS NOT an assembly, recommend splitting subsections into separate modules.
 
 **Detail**
 
 If the AsciiDoc file is an assembly, this limitation applies only to text present in the assembly itself and not to modules included in the assembly. An assembly file often, but not always, has `assembly` in its name. To comply with the templates, it must have a `:_mod-docs-content-type: ASSEMBLY` attribute definition at the start of the file.
 
-If the `NestedSection` error is reported for an assembly, ensure that the `:_mod-docs-content-type: ASSEMBLY` attribute definition is present. Then recomment **manual** review, in order to either flatten the structure to limit it to second-level headings or else to split the assembly. This decision must be made by the writer, because it involves a wider context than just the assembly file.
+If the `NestedSection` error is reported for an assembly, ensure that the `:_mod-docs-content-type: ASSEMBLY` attribute definition is present. Then recommend **manual** review, in order to either flatten the structure to limit it to second-level headings or else to split the assembly. This decision must be made by the writer, because it involves a wider context than just the assembly file.
 
 AsciiDoc files which are not assemblies are normally modules. If a module contains headings of level 3 or deeper (so with the AsciiDoc prefix of `===` or more), you must break the file into several modules. Typically, you will need to move sections of the file (level 2 headings, `==` Asciidoc prefix) into their own modules.
 
@@ -203,7 +203,7 @@ When breaking a module into several modules, ensure that every module has the co
 
 **AI action plan**
 * Determine if the "Procedure" heading exists as a subsection heading instead of a block title. If this is true, suggest changing to block title.
-* Otherwise, determine if the text contains a list of procedural steps (or a clear single procedural step). If this is true, suggest adding a `.Procedure` block titme. If the list is not properly formatted as a list, suggest formatting it as a list; if there is a single step, suggest formating it as an uniordered list with a single item.
+* Otherwise, determine if the text contains a list of procedural steps (or a clear single procedural step). If this is true, suggest adding a `.Procedure` block title. If the list is not properly formatted as a list, suggest formatting it as a list; if there is a single step, suggest formatting it as an unordered list with a single item.
 * Otherwise, suggest rewriting the module as a procedure.
 
 **Detail**
@@ -212,7 +212,7 @@ According to the [template for procedures](TEMPLATE_PROCEDURE_doing-one-procedur
 
 Sometimes, "Procedure" is mistakenly included as a section heading (for example, `== Procedure`) instead of a block title (`.Procedure`). In this case, suggest replacing it with `.Procedure`. Also check for typos in the section name, for example, `== Proedure` should still be replaced with `.Procedure`).
 
-If no procedure heading can be found, analyse the text of the module. Several possibilioties exist.
+If no procedure heading can be found, analyze the text of the module. Several possibilities exist.
 
 Does the module have a list of procedural steps? For example:
 
@@ -299,7 +299,7 @@ Failure:
 .Caring for floppy disks
 ====
 * Put 5 inch floppies in sleeves at all times when they are not in use
-* Never expose floppies to direct sublight
+* Never expose floppies to direct sunlight
 * Keep all floppies far away from magnets
 ====
 ```
@@ -311,7 +311,7 @@ Corrected:
 ====
 Take the following steps to care for floppy disks:
 * Put 5 inch floppies in sleeves at all times when they are not in use
-* Never expose floppies to direct sublight
+* Never expose floppies to direct sunlight
 * Keep all floppies far away from magnets
 ====
 ```
@@ -326,7 +326,7 @@ Then work through several possibilities:
 
 * **If the specific block title is `.Procedure` and the module's content type is NOT `procedure`**, always complete the following action: analyze the entire module and suggest either converting the module to a procedure or splitting the procedure part into another module. **In this specific case do not proceed to other rules.**
 * If the module's content type is not `procedure` and the block title is one of block titles supported for procedure elements according to the [template for procedures](TEMPLATE_PROCEDURE_doing-one-procedure.adoc), analyze the entire module to see if the module or a part of it is a procedure. If it is, suggest either converting the module to a procedure or splitting the procedure part into another module.
-* If the block title is `.Example` or `.Examples` and it is the onl;y block of this type in a module (or `Example of something` when the module containt only one example like that), change the content under this title into a single AsciiDoc `[example]` block. The block title `.Example` is supported when it covers a single example block. **You must not add more than one example block per file. Also, an example block must not be a part of a list, for example, it must not be joined to a list using a + sign. If you need to handle multiple examples, reword the headings as in the "heading to a block" option**.
+* If the block title is `.Example` or `.Examples` and it is the only block of this type in a module (or `Example of something` when the module contains only one example like that), change the content under this title into a single AsciiDoc `[example]` block. The block title `.Example` is supported when it covers a single example block. **You must not add more than one example block per file. Also, an example block must not be a part of a list, for example, it must not be joined to a list using a + sign. If you need to handle multiple examples, reword the headings as in the "heading to a block" option**.
 * If several block titles in succession represent a list, change to an unordered list or description list. **However, if `.Procedure` is one of the block titles in the sequence, do not apply this fix to the `.Procedure` block title. Use the specific rule for the `.Procedure` block title.** You can still apply the list fix to other block titles.
 * If the module is not a procedure and the block title is where a subheading should logically be: if this would be a second level subheading (`==`), suggest converting the block title to a subheading. Otherwise, suggest splitting the module.
 * If the module is a procedure and the block title is where a subheading should logically be: suggest splitting the module.
@@ -553,7 +553,7 @@ file1  file2
 Correction:
 
 ```
-Use the `ls` command to list files. You can provide a wildcard to listy only the files that fit this wildcard, as in the following example:
+Use the `ls` command to list files. You can provide a wildcard to list only the files that fit this wildcard, as in the following example:
 
 ----
 $ ls f*
@@ -660,14 +660,14 @@ For working out content types for your files, especially if you need to determin
 
 **Detail**
 
-Cross-references that reference AsciiDoc files do convert clearnly to DITA. Cross-references that reference only an ID take some more work to convert and therefore cause this warning. However, there is a standard approach to such conversiion at this time. TYhe user can safely ignore `CrossReference` issues.
+Cross-references that reference AsciiDoc files do convert cleanly to DITA. Cross-references that reference only an ID take some more work to convert and therefore cause this warning. However, there is a standard approach to such conversion at this time. The user can safely ignore `CrossReference` issues.
 
 If you are an AI handling the `CrossReference` warning, list all the instances of this warning in a file together, provide this explanation, and do not recommend any other action for this warning.
 
 ## LineBreak
 
 **AI action plan**
-* Locate the affected `+` character and analyse the context. Pay attention to whether the `+` character is within an AsciiDoc structure, such as a list or table.
+* Locate the affected `+` character and analyze the context. Pay attention to whether the `+` character is within an AsciiDoc structure, such as a list or table.
 * If the `+` character is within a **table**, remove the `+`, replace it with a blank line, and add an `a` prefix operator to the cell.
 * Otherwise, if the `+` is at the end of a line **within a list** and the following text is a distinct block (like a code block, table, or admonition), move the `+` to its own line to attach the block to the list item.
 * Otherwise, if the `+` is at the end of a line and the following text is a distinct block but you are **NOT within a list**, remove the `+` and replace it with a single blank line to create a paragraph break.
@@ -844,7 +844,7 @@ Correction:
 
 **AI action plan**
 **Group**
-* Display an explanation that the user must either replace the link target manually or else give the conversion team a list of the atributes and their values to resolve the matter at conversion time. **Include the name of any used attribute in the explanation**.
+* Display an explanation that the user must either replace the link target manually or else give the conversion team a list of the attributes and their values to resolve the matter at conversion time. **Include the name of any used attribute in the explanation**.
 * Do not suggest fixes
 
 **Detail**
@@ -874,8 +874,8 @@ If you are an AI handling the `LinkAttribute` warning, list all the instances of
 ## TaskStep
 
 **AI action plan**
-* Analyse the content from this line to the next block title, for example, `.Results`, or to the end of the file if there is no following block title. You must understand if it is still a part of the procedure, and if so, how to join it into the ordered or unordered list of steps.
-* If the error line number is inside a table definition and is an empty line between table rows, this is a false positive in the current version of Vale. Remove the empty line and any other emplty lines before the table rows, this change should not change the content of the table. Do not change the table and do not remove the block title of the table. Also try to detect any valid breaks in the AsciiDoc list and fix them.
+* Analyze the content from this line to the next block title, for example, `.Results`, or to the end of the file if there is no following block title. You must understand if it is still a part of the procedure, and if so, how to join it into the ordered or unordered list of steps.
+* If the error line number is inside a table definition and is an empty line between table rows, this is a false positive in the current version of Vale. Remove the empty line and any other empty lines before the table rows, this change should not change the content of the table. Do not change the table and do not remove the block title of the table. Also try to detect any valid breaks in the AsciiDoc list and fix them.
 * If the content continues the list but has one or several line breaks that cause the issue, fix the AsciiDoc list by using the `+` line break symbol on its own line  
 * If some of the content has conceptual subtitles, for example using bold text, and lists actions under them, convert these subtitles into an unordered list of substeps, or an ordered list if they have numbers.
 * If the content continues the procedure conceptually but is not formatted into steps or substeps, attempt to reformat it into steps and substeps as necessary, and ensure they are joined to the existing ordered or unordered AsciiDoc list of steps. You can use the `+` line break symbol on its own line and the AsciiDoc open block, denoted by `--` lines, to ensure correct AsciiDoc as necessary.
@@ -1028,13 +1028,13 @@ include::example-procedure.adoc[leveloffset=+1]
 
 == Configuration reference
 
-Refer to the following configuration defails:
+Refer to the following configuration details:
 
 include::example-reference1.adoc[leveloffset=+2]
 include::example-reference2.adoc[leveloffset=+2]
 ```
 
-Correction: suggest removing the introductory line, as "Configuration reference" is a sufficient description.
+Correction: suggest moving the "Configuration reference" heading and any introductory text into an included module. 
 
 Failure:
 
@@ -1053,7 +1053,7 @@ Correction: suggest moving the "Next steps" section into the `example-procedure.
 ## CalloutList
 
 **AI action plan**
-* Replace callouts such as `value <1>`, usually located inside a code block, with user-replaceable placeholders in angled bbrackets, such as `<value>`; then replace the caallout list that expands these callouts with a description list for user-replaceable values
+* Replace callouts such as `value <1>`, usually located inside a code block, with user-replaceable placeholders in angled brackets, such as `<value>`; then replace the callout list that expands these callouts with a description list for user-replaceable values
 * Alternatively, if the callout list applies to parts of the code and not values, remove the callouts and list the keys in a bulleted list.
 
 
@@ -1241,7 +1241,7 @@ Failure:
 
 You can use any of the following search engines:
 * link:http://www.google.com[Google], which is often the default
-* link:http://www.duckduckgo.com[DuckDuckGo]
+* link:http://www.duckduckgo.com[DuckDuckGo].
 * link:http://www.bing.com[Bing]
 ```
 
